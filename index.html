@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Document</title>
+    <script type="text/javascript" src="/main.js"></script>
+</head>
+
+<video autoplay="true" id="videoElement">	
+</video>
+<body>
+    <script type="module">
+        //imports
+        import * as THREE from './js/Three.js';
+        import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
+
+        //variables
+        let controls;
+        const clock = new THREE.Clock();
+        const render_window = document.body;
+        //temp webcam 
+        var video = document.querySelector("#videoElement");
+
+        //scaling
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                video.srcObject = stream;
+                })
+                .catch(function (err0r) {
+                console.log("Something went wrong!");
+                });
+        }
+
+        //use div as texture
+        const webcam_texture = new THREE.VideoTexture( video );
+
+        //create scene
+        var scene = new THREE.Scene();
+        //create camera
+        var camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth/window.innerHeight,0.1,1000
+        )
+
+        //set camera position
+        camera.position.z = 5;
+
+        var renderer = new THREE.WebGLRenderer({antialias: true});
+        //set clear background
+        renderer.setClearColor("#e5e5e5");
+        //set renderer size 
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        //add renderer to dom/html
+        render_window.appendChild(renderer.domElement);
+
+        //auto scale renderer on window resize
+        window.addEventListener('resize', ()=>{
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+
+            camera.updateProjectionMatrix();
+        })
+
+
+        //geometry sphere                       //radious, widt, height
+        //var geometrySphere = new THREE.SphereGeometry(1, 4 ,4);
+        //box geometry
+        var geometryBox = new THREE.BoxGeometry(1, 1 ,1);
+        var geometryPlane = new THREE.PlaneGeometry(1,1,1);
+        //material
+        var webcam_material = new THREE.MeshBasicMaterial({map: webcam_texture, side: THREE.SingleSide});
+        var material_wall = new THREE.MeshLambertMaterial({color: "rgb(165, 182, 184)"});
+        var material_ground = new THREE.MeshLambertMaterial({color: "rgb(176, 124, 67)"});
+        var material_table = new THREE.MeshLambertMaterial({color: "rgb(255, 255, 255)"});
+
+
+        //mesh
+        var mesh_webcam1 = new THREE.Mesh(geometryPlane, webcam_material);
+        var mesh_ground = new THREE.Mesh(geometryBox, material_ground);
+        var mesh_wall = new THREE.Mesh(geometryBox, material_wall);
+        var mesh_wall2 = new THREE.Mesh(geometryBox, material_wall);
+        var mesh_wall3 = new THREE.Mesh(geometryBox, material_wall);
+
+        var table_1 = new THREE.Mesh(geometryBox, material_table);
+
+        //position
+        mesh_webcam1.position.x = 2;
+        mesh_ground.position.y = -2;
+        mesh_wall.position.x = 4;
+        mesh_wall2.position.x = -4;
+        mesh_wall3.position.z = -4;
+        table_1.position.z = 3;
+        table_1.position.y = -1;
+        //rotation
+        mesh_webcam1.rotation.set(0,-0.5,0);
+        mesh_wall3.rotation.set(0,0,0);
+
+        //scale
+        mesh_ground.scale.set(10,1,10);
+        mesh_wall.scale.set(1,10,10);
+        mesh_wall2.scale.set(1,10,10);
+        mesh_wall3.scale.set(10,10,1);
+        table_1.scale.set(2,1,5);
+        //add object to scene
+        scene.add(mesh_webcam1);
+        scene.add(mesh_ground);
+        scene.add(mesh_wall);
+        scene.add(mesh_wall2);
+        scene.add(mesh_wall3);
+        scene.add(table_1);
+
+        //create point light
+        var light = new THREE.PointLight("rgb(255,255,255)", 1.5, 500);
+        //directional light
+        //const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+
+        //set light position
+        light.position.set(0,1,0);
+        //scene.add( directionalLight );
+        scene.add(light);
+
+        //controls
+        controls = new FirstPersonControls( camera, renderer.domElement );
+	    controls.movementSpeed = 0;
+
+        //set eventlistener mouse down
+        render_window.addEventListener('mousedown', mouseDown, false);
+        render_window.addEventListener('mouseup', mouseUp, false);
+        
+        controls.lookSpeed = 0;
+
+        function mouseDown(){
+            controls.lookSpeed = 0.4;
+        }
+        function mouseUp(){
+            controls.lookSpeed = 0;
+        }
+        
+        //call renderer to (re)render
+        var render = function() {
+            requestAnimationFrame(render);
+
+            //mesh_webcam1.rotation.x += 0.01;
+            
+            //update controls
+            controls.update( clock.getDelta() );
+
+            //final render
+            renderer.render(scene, camera);
+        }
+
+        render();
+    </script>
+</body>
+</html>
