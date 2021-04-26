@@ -1,0 +1,39 @@
+.welcome .welcome-footer-padded{
+    display:none;
+}
+.welcome .welcome-footer{
+    height: 100px;
+}
+.welcome .header{
+    background-image: linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),url(../images/imageb.png);
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    padding-bottom: 0;
+    background-color: #131519;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+}
+.welcome .welcome-footer{
+    background: #131519;
+    color: #fff;
+    margin-top: 40px;
+    position: relative;
+    /*height: 700px;*/
+}
+
+.welcome .welcome-card-row {
+    display:none;
+}
+.welcome .tab-container .tab-content{
+    display:none;
+}
+.welcome .welcome-card-row {
+    display:none;
+}
+
+#videoElement{
+    display: none;
+}
