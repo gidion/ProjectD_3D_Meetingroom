@@ -34,6 +34,7 @@
     display:none;
 }
 
-#videoElement{
+/*disable jitsi meet video div, to show 3d meeting room*/
+#videoconference_page #videospace{
     display: none;
 }
