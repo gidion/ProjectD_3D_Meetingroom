@@ -5,27 +5,41 @@ class Cameraman {
   constructor(camera, controls, scene, screen) {
     const vid = document.querySelector('video')
     window.addEventListener('keyup', async function(event) {
-      //console.log(event.key)
-
       switch (event.key) {
 
           // starting position reset
           case 'r':
-          camera.position.set(0, 2.5, 6);
-          controls.target.set(0, 2.5, 5.9);
-          camera.seated = false // if camera is at chair
-          break;
+          camera.position.set(0, 2.5, 6)
+          controls.target.set(0, 2.5, 5.9)
+          break
 
-          // 'minimap'
-          case 'm':
+          case 't':
           camera.position.set(0, 15, 0);
           controls.target.set(0, 14.9, 0);
-          camera.seated = false // if camera is at chair
+          break
+
+          // minimap
+          case 'm':
+          // Get the minimap element
+          var mm = document.querySelector( '#minimap' );
+          
+          // Set visibility to hidden if it is currently visible, or to visible otherwise
+          function toggle_visibility() {
+            
+            if ( mm.style.visibility == 'visible' ) {
+              mm.style.setProperty( 'visibility', 'hidden' )
+            }
+            else {
+              mm.style.setProperty( 'visibility', 'visible' )
+            }
+          }
+          toggle_visibility();
           break
 
           // debug
           case ' ':
-          console.log(camera.position)
+          break
+
 
           // 'toggle video'
           case 'p':
