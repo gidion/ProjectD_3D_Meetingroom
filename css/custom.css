@@ -4,6 +4,9 @@
 .welcome .welcome-footer{
     height: 100px;
 }
+.welcome{
+    z-index: 10;
+}
 .welcome .header{
     background-image: linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),url(../images/imageb.png);
     background-position: center;
@@ -15,6 +18,7 @@
     overflow: hidden;
     position: absolute;
     width: 100%;
+    transform: translatey(-20px);
 }
 .welcome .welcome-footer{
     background: #131519;
@@ -23,18 +27,23 @@
     position: relative;
     /*height: 700px;*/
 }
-
-.welcome .welcome-card-row {
-    display:none;
-}
-.welcome .tab-container .tab-content{
-    display:none;
-}
-.welcome .welcome-card-row {
-    display:none;
-}
+.welcome .welcome-card-row {display:none;}
+.welcome .tab-container .tab-content{display:none;}
+.welcome .welcome-card-row {display:none;}
 
 /*disable jitsi meet video div, to show 3d meeting room*/
-#videoconference_page #videospace{
-    display: none;
+#videoconference_page #videospace{display: none;}
+.welcome .header .header-text-subtitle {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 26px;
+    margin: 16px 0 20px 0;
+    text-align: center;
+    padding-top: 40px;
+}
+.welcome .header .header-text-title{transform: translateX(-1%);}
+
+body.welcome-page {
+    overflow: hidden;
 }

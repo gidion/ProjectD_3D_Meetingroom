@@ -10,6 +10,7 @@ class Loop {
     this.updateables = []; // list of animated items that need to update / tick
   }
 
+  
   start() {
     this.renderer.setAnimationLoop(() => {
     // tell every animated object to tick forward one frame
@@ -31,6 +32,7 @@ class Loop {
     for (const object of this.updateables) {
       object.tick(delta);
     }
+    
   }
 }
 

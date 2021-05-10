@@ -14,6 +14,9 @@ import { Loop } from './systems/Loop.js'
 import { Raycast } from './systems/Raycaster.js';
 import { Resizer } from './systems/Resizer.js';
 
+//////////import gazer
+
+
 // These variables are module-scoped: we cannot access them
 // from outside the module
 let camera;
@@ -28,7 +31,7 @@ class World {
     renderer = createRenderer();
     loop = new Loop(camera, scene, renderer);
     container.append(renderer.domElement);
-
+    
     const controls = createControls(camera, renderer.domElement);
     loop.updateables.push(controls); // for damping effect to work
 
@@ -61,12 +64,32 @@ class World {
 
     controls.target.set(0, 2.5, 5.9); // Initial camera target
 
+    
     // controls.minAzimuthAngle = - MathUtils.degToRad(20); // Limit Camera rotation angle left
     // controls.maxAzimuthAngle = MathUtils.degToRad(20);   // Limit Camera rotation angle right
 
     // controls.minPolarAngle = MathUtils.degToRad(0); // Limit Camera rotation angle up
     // controls.maxPolarAngle = MathUtils.degToRad(95); // Limit Camera rotation angle down
-
+    //camera.rotation.y = 0;
+    webgazer.setGazeListener(function(data, timestamp) {
+      var windowWidth = window.innerWidth;
+      var windowCenter = windowWidth / 2;
+      var degreeRotation = camera.rotation.y * 180 / Math.PI;
+  
+      try{
+          // main camera rotation
+          if(data.x < windowCenter){
+              var pixelPerRotation = 90*((windowCenter - data.x) / windowCenter);
+              rotateCam(deviser(degreeRotation - (degreeRotation - pixelPerRotation)), degreeRotation, 3, camera);
+          }
+          if(data.x > windowCenter){
+              var pixelPerRotation = 90*((data.x - windowCenter) / windowCenter);
+              rotateCam(deviser(degreeRotation + (pixelPerRotation - degreeRotation)), degreeRotation, 3, camera);
+          }        
+      }
+      catch{ }   
+  }).begin();
+    
   }
 
   // add objects from models.js

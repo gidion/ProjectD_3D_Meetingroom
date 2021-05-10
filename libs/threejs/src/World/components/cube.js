@@ -15,7 +15,7 @@ function createTextureMaterial(map, rep_x, rep_y) {
   const textureLoader = new TextureLoader();
   // load a texture
   const texture = textureLoader.load(
-    '/assets/textures/' + map
+    'libs/threejs/assets/textures/' + map
   );
   texture.repeat.set(rep_x, rep_y)
   texture.wrapS = texture.wrapT = RepeatWrapping;
