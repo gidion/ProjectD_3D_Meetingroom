@@ -1,35 +1,35 @@
 // ./components imports
-import { createCamera } from './components/camera.js';
-import { createCube, createTexCube } from './components/cube.js';
+import { createCamera } from './components/camera.js'
+import { createCube, createTexCube } from './components/cube.js'
 import { createAmbientLight, createDirectionalLights, createHemisphereLight, createPointLight } from './components/lights.js'
-import { createScene } from './components/scene.js';
+import { createScene } from './components/scene.js'
 
 import { loadModels } from './components/models/models.js'
 
 // ./systems imports
-import { Cameraman} from './systems/Cameraman.js';
-import { createControls } from './systems/controls.js';
-import { createRenderer } from './systems/renderer.js';
+import { Cameraman} from './systems/Cameraman.js'
+import { createControls } from './systems/controls.js'
+import { createRenderer } from './systems/renderer.js'
 import { Loop } from './systems/Loop.js'
-import { Raycast } from './systems/Raycaster.js';
-import { Resizer } from './systems/Resizer.js';
+import { Raycast } from './systems/Raycaster.js'
+import { Resizer } from './systems/Resizer.js'
 
 // Module-scoped variables
-let camera;
-let renderer;
-let scene;
-let loop;
+let camera
+let renderer
+let scene
+let loop
 
 class World {
   constructor(container) {
-    const camera = createCamera();
-    scene = createScene();
-    renderer = createRenderer();
-    loop = new Loop(camera, scene, renderer);
-    container.append(renderer.domElement);
+    const camera = createCamera()
+    scene = createScene()
+    renderer = createRenderer()
+    loop = new Loop(camera, scene, renderer)
+    container.append(renderer.domElement)
 
-    const controls = createControls(camera, renderer.domElement);
-    loop.updateables.push(controls); // for damping effect to work
+    const controls = createControls(camera, renderer.domElement)
+    loop.updateables.push(controls) // for damping effect to work
 
     const roomsize = [10, 15, 5] // Width, Length, Height
 
@@ -54,34 +54,34 @@ class World {
 
     scene.add(floor, frontwall, backwall, sidewall_left, sidewall_right, //ceiling,
        screenframe, screen,
-       light, light2, hemisphereLight, lamp);
+       light, light2, hemisphereLight, lamp)
 
-    const resizer = new Resizer(container, camera, renderer);  // Resize window when resize event is fired
-    const cameraman = new Cameraman(camera, controls, scene, screen);  // Orbital camera controls
-    const raycaster = new Raycast(camera, controls, renderer, scene); // Check if anything interactive was clicked
+    const resizer = new Resizer(container, camera, renderer)  // Resize window when resize event is fired
+    const cameraman = new Cameraman(camera, controls, scene, screen)  // Orbital camera controls
+    const raycaster = new Raycast(camera, controls, renderer, scene) // Check if anything interactive was clicked
 
-    controls.target.set(0, 2.5, 5.9); // Initial camera target
+    controls.target.set(0, 2.5, 5.9) // Initial camera target
   }
 
   // Add objects from models.js
   async init() {
-    const { chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, table, door } = await loadModels();
-    scene.add( chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, table, door )
-  };
+    const { chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, table, door, coffee_cup, bell, light_switch } = await loadModels()
+    scene.add( chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, table, door, coffee_cup, bell, light_switch )
+  }
 
 
   render() {
     // draw a single frame
-    renderer.render(scene, camera);
+    renderer.render(scene, camera)
   }
 
   start() {
-    loop.start();
+    loop.start()
   }
 
   stop() {
-    loop.stop();
+    loop.stop()
   }
 }
 
-export { World };
+export { World }
