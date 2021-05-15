@@ -1,4 +1,6 @@
 //camera.rotation.y = 0
+//is now true, because gazer is automaticly paused on start
+var paused = true;
 
 // devide screen into sections and return target section
 function deviser(cameraRotation){
@@ -15,24 +17,26 @@ function deviser(cameraRotation){
 
 // pause eye tracking / TODO: add button on html page
 function gazePauser(){
-    var paused = false;
+    
 
     if(paused == true){
-        webgazer.resume();
+        webgazer.resume();     
         paused = false;
+        return;
     }
     if(paused == false){
         webgazer.pause();
         paused = true;
+        return;
     }
 }
 
 // animated rotation
 function rotateCam(targetRotation, degreeRotation, degree, camera){
-    console.log("target degree rotation: " + targetRotation);
+    /*console.log("target degree rotation: " + targetRotation);
     console.log("current degree rotation:" + degreeRotation);
     console.log("current radian rotation: " + camera.rotation.y);
-    
+    */
     if(degreeRotation < targetRotation){
         if(targetRotation - 5 < degreeRotation && targetRotation + 5 > degreeRotation){
             degreeRotation = targetRotation;

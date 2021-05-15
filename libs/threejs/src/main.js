@@ -12,6 +12,8 @@ async function main() {
 
   // start the animation loop
   world.start();
+  //pause webgazer, until user enables it
+  webgazer.pause();
 }
 
 main().catch((err) => {

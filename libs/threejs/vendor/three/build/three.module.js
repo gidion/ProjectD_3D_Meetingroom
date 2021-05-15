@@ -28207,21 +28207,21 @@ class DodecahedronGeometry extends PolyhedronGeometry {
 
 		const vertices = [
 
-			// (±1, ±1, ±1)
+			// (ï¿½1, ï¿½1, ï¿½1)
 			- 1, - 1, - 1,	- 1, - 1, 1,
 			- 1, 1, - 1, - 1, 1, 1,
 			1, - 1, - 1, 1, - 1, 1,
 			1, 1, - 1, 1, 1, 1,
 
-			// (0, ±1/Æ, ±Æ)
+			// (0, ï¿½1/ï¿½, ï¿½ï¿½)
 			0, - r, - t, 0, - r, t,
 			0, r, - t, 0, r, t,
 
-			// (±1/Æ, ±Æ, 0)
+			// (ï¿½1/ï¿½, ï¿½ï¿½, 0)
 			- r, - t, 0, - r, t, 0,
 			r, - t, 0, r, t, 0,
 
-			// (±Æ, 0, ±1/Æ)
+			// (ï¿½ï¿½, 0, ï¿½1/ï¿½)
 			- t, 0, - r, t, 0, - r,
 			- t, 0, r, t, 0, r
 		];
@@ -36105,7 +36105,7 @@ CatmullRomCurve3.prototype.isCatmullRomCurve3 = true;
 
 /**
  * Bezier Curves formulas obtained from
- * http://en.wikipedia.org/wiki/Bézier_curve
+ * http://en.wikipedia.org/wiki/Bï¿½zier_curve
  */
 
 function CatmullRom( t, p0, p1, p2, p3 ) {
@@ -38018,19 +38018,19 @@ class SphericalHarmonics3 {
 		const coeff = this.coefficients;
 
 		// band 0
-		target.copy( coeff[ 0 ] ).multiplyScalar( 0.886227 ); // À * 0.282095
+		target.copy( coeff[ 0 ] ).multiplyScalar( 0.886227 ); // ï¿½ * 0.282095
 
 		// band 1
-		target.addScaledVector( coeff[ 1 ], 2.0 * 0.511664 * y ); // ( 2 * À / 3 ) * 0.488603
+		target.addScaledVector( coeff[ 1 ], 2.0 * 0.511664 * y ); // ( 2 * ï¿½ / 3 ) * 0.488603
 		target.addScaledVector( coeff[ 2 ], 2.0 * 0.511664 * z );
 		target.addScaledVector( coeff[ 3 ], 2.0 * 0.511664 * x );
 
 		// band 2
-		target.addScaledVector( coeff[ 4 ], 2.0 * 0.429043 * x * y ); // ( À / 4 ) * 1.092548
+		target.addScaledVector( coeff[ 4 ], 2.0 * 0.429043 * x * y ); // ( ï¿½ / 4 ) * 1.092548
 		target.addScaledVector( coeff[ 5 ], 2.0 * 0.429043 * y * z );
-		target.addScaledVector( coeff[ 6 ], 0.743125 * z * z - 0.247708 ); // ( À / 4 ) * 0.315392 * 3
+		target.addScaledVector( coeff[ 6 ], 0.743125 * z * z - 0.247708 ); // ( ï¿½ / 4 ) * 0.315392 * 3
 		target.addScaledVector( coeff[ 7 ], 2.0 * 0.429043 * x * z );
-		target.addScaledVector( coeff[ 8 ], 0.429043 * ( x * x - y * y ) ); // ( À / 4 ) * 0.546274
+		target.addScaledVector( coeff[ 8 ], 0.429043 * ( x * x - y * y ) ); // ( ï¿½ / 4 ) * 0.546274
 
 		return target;
 

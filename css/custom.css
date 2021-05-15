@@ -47,3 +47,12 @@
 body.welcome-page {
     overflow: hidden;
 }
+
+#gazePauser{
+    position: absolute;
+    z-index: 2;
+}
+
+#webgazerVideoContainer{
+    display: none !important;
+}

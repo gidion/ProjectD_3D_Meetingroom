@@ -1,9 +1,19 @@
 
 <div class="body-div">
     <video id="video" autoplay style="display:none"></video>
-    <!--<div id="minimap" width="320" height="2400" style="resize:both; overflow:auto; display:inline-block; top:50px; right:50px; visibility:visible; background-color: powderblue; border:brown">Video stream not available.</div> -->
+    <div id="minimap" style="visibility: hidden">
+        <img src="libs/threejs/assets/images/minimap.png" id="mm_image">
+        <button class="mm_btn" id="btn_l4" style="position: absolute; left:6%; bottom:82%;"></button>
+        <button class="mm_btn" id="btn_r4" style="position: absolute; left:76%; bottom:82%;"></button>
+        <button class="mm_btn" id="btn_l3" style="position: absolute; left:6%; bottom:57%;"></button>
+        <button class="mm_btn" id="btn_r3" style="position: absolute; left:76%; bottom:57%;"></button>
+        <button class="mm_btn" id="btn_l2" style="position: absolute; left:6%; bottom:33%;"></button>
+        <button class="mm_btn" id="btn_r2" style="position: absolute; left:76%; bottom:33%;"></button>
+        <button class="mm_btn" id="btn_l1" style="position: absolute; left:6%; bottom:9%;"></button>
+        <button class="mm_btn" id="btn_r1" style="position: absolute; left:76%; bottom:9%;"></button>
+    </div>
     <div id="scene-container">
     </div>
-    <button onclick="gazePauser()">pause webgazer</button>
+    <button id="gazePauser"onclick="gazePauser()">Toggle webgazer</button>
         
 </div> 
