@@ -71,7 +71,7 @@ class World {
 
     const resizer = new Resizer(container, camera, renderer)  // Resize window when resize event is fired
     const cameraman = new Cameraman(camera, controls, scene, screen)  // Orbital camera controls
-    const raycaster = new Raycast(camera, controls, renderer, scene, light_dict) // Check if anything interactive was clicked
+    const raycaster = new Raycast(camera, controls, renderer, scene, screen, light_dict) // Check if anything interactive was clicked
 
     controls.target.set(0, 2.5, 5.9) // Initial camera target
   }

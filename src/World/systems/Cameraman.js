@@ -43,56 +43,61 @@ class Cameraman {
 
           // 'toggle video'
           case 'p':
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: true
-            })
-            const videoTracks = stream.getVideoTracks()
-            const track = videoTracks[0]
-            //alert(`Getting video from: ${track.label}`)
-            vid.srcObject = stream
-            //setTimeout(() => { track.stop() }, 3 * 1000)
-            }
-            
-            catch (error) {
-            alert(`${error.name}`)
-            console.error(error)
-            }
-
-            // Add video to chair
-            if (scene.getObjectByName( 'Video' ) == undefined && camera.seated) {
-              const vidcube = createVideoCube(0.01, 0.6, 0.8, camera.position.x, camera.position.y, camera.position.z)//+0.07)
-              const vidcubeborder = createCube(0.02, 0.68, 0.88, vidcube.position.x*1.005, vidcube.position.y, vidcube.position.z, 0x99ddff, 'VideoBorder')
-              //vidcube.rotation.y = MathUtils.degToRad()
-              
-              scene.add(vidcube)
-              scene.add(vidcubeborder)
-            }
-
-            // Add video to screen
-            else if (scene.getObjectByName( 'Video' ) == undefined && !camera.seated) {
-              const screensize = screen.geometry.parameters
-              const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
-              scene.add(vidcube)
-            }
-            else {
-              // Remove video stuff
-              var object = scene.getObjectByName( 'Video' )
-              scene.remove(object)
-              object.geometry.dispose()
-              object.material.dispose()
-              object = undefined
-              var object = scene.getObjectByName( 'VideoBorder' )
-              scene.remove(object)
-              object.geometry.dispose()
-              object.material.dispose()
-              object = undefined
-            }
-            break
+          startVideo()
         }
     })  
   
+
+  // Start video
+  async function startVideo() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: true
+      })
+      const videoTracks = stream.getVideoTracks()
+      const track = videoTracks[0]
+      //alert(`Getting video from: ${track.label}`)
+      vid.srcObject = stream
+      //setTimeout(() => { track.stop() }, 3 * 1000)
+      }
+      
+      catch (error) {
+      alert(`${error.name}`)
+      console.error(error)
+      }
+
+      // Add video to chair
+      if (scene.getObjectByName( 'Video' ) == undefined && camera.seated) {
+        const vidcube = createVideoCube(0.01, 0.6, 0.8, camera.position.x, camera.position.y, camera.position.z)//+0.07)
+        const vidcubeborder = createCube(0.02, 0.68, 0.88, vidcube.position.x*1.005, vidcube.position.y, vidcube.position.z, 0x99ddff, 'VideoBorder')
+        //vidcube.rotation.y = MathUtils.degToRad()
+        
+        scene.add(vidcube)
+        scene.add(vidcubeborder)
+      }
+
+      // Add video to screen
+      else if (scene.getObjectByName( 'Video' ) == undefined && !camera.seated) {
+        const screensize = screen.geometry.parameters
+        const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
+        scene.add(vidcube)
+      }
+      else {
+        // Remove video stuff
+        var object = scene.getObjectByName( 'Video' )
+        scene.remove(object)
+        object.geometry.dispose()
+        object.material.dispose()
+        object = undefined
+        var object = scene.getObjectByName( 'VideoBorder' )
+        scene.remove(object)
+        object.geometry.dispose()
+        object.material.dispose()
+        object = undefined
+      }
+      
+  }
 
   // Create a video material
   function createVideoMaterial() {

@@ -1,8 +1,10 @@
-import { Raycaster, Vector2 } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
+import { BoxBufferGeometry, Mesh, MeshStandardMaterial, Raycaster, Vector2, VideoTexture } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
 import { toggleLight } from '../components/lights.js'
+import { createCube } from '../components/cube.js'
 
 class Raycast {
-  constructor(camera, controls, renderer, scene, light_dict) {
+  constructor(camera, controls, renderer, scene, screen, light_dict) {
+    const vid = document.querySelector('video')
     const raycaster = new Raycaster()
     const mouse = new Vector2()
     const chair_availability = {chair_l1: true, chair_r1: true, chair_l2: true, chair_r2: true,
@@ -97,7 +99,7 @@ class Raycast {
       camera.seated = chair
     }
 
-    function render() {
+    async function render() {
 
         // update the picking ray with the camera and mouse position
         raycaster.setFromCamera( mouse, camera )
@@ -146,11 +148,12 @@ class Raycast {
               p_done = true
               break
             }
+
             // Laptop clicked
             else if (p_cur.name == 'laptop'){
               // check if sitting in correct chair
               if (camera.seated == 'chair_l4'){
-                alert('Laptop clicked, in correct chair')
+                startVideo()
               }
               else {
                 alert('Laptop clicked, not in correct chair')
@@ -197,6 +200,74 @@ class Raycast {
         }
         break
     }})
+
+        // Start video
+    async function startVideo() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: true
+        })
+        const videoTracks = stream.getVideoTracks()
+        const track = videoTracks[0]
+        //alert(`Getting video from: ${track.label}`)
+        vid.srcObject = stream
+        //setTimeout(() => { track.stop() }, 3 * 1000)
+        }
+        
+        catch (error) {
+        alert(`${error.name}`)
+        console.error(error)
+        }
+
+        // Add video to screen
+        if (scene.getObjectByName( 'Video' ) == undefined ) {
+          const screensize = screen.geometry.parameters
+          const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
+          scene.add(vidcube)
+        }
+        else {
+          // Remove video stuff
+          var object = scene.getObjectByName( 'Video' )
+          scene.remove(object)
+          object.geometry.dispose()
+          object.material.dispose()
+          object = undefined
+          var object = scene.getObjectByName( 'VideoBorder' )
+          scene.remove(object)
+          object.geometry.dispose()
+          object.material.dispose()
+          object = undefined
+        }
+        
+    }
+
+    // Create a video material
+    function createVideoMaterial() {
+    const video = document.getElementById( 'video' )
+    const texture = new VideoTexture( video )
+    const material = new MeshStandardMaterial({
+        map: texture,
+        transparent: true
+      })
+    return material
+    }
+
+    // Create a video cube
+    function createVideoCube(x, y, z, pos_x, pos_y, pos_z) {
+    // create a geometry
+    const geometry = new BoxBufferGeometry(x,y,z)
+
+    // create a the video material
+    const material = createVideoMaterial()
+
+    // create a Mesh containing the geometry and material
+    const cube = new Mesh(geometry, material)
+    cube.position.set(pos_x, pos_y, pos_z)
+
+    cube.name = 'Video'
+    return cube
+    }
   }
 }
 
