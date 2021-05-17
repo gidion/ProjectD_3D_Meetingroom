@@ -61,14 +61,7 @@ class World {
     const raycaster = new Raycast(camera, controls, renderer, scene) // Check if anything interactive was clicked
 
     controls.target.set(0, 2.5, 5.9) // Initial camera target
-  
-    // controls.minAzimuthAngle = - MathUtils.degToRad(20); // Limit Camera rotation angle left
-    // controls.maxAzimuthAngle = MathUtils.degToRad(20);   // Limit Camera rotation angle right
 
-    // controls.minPolarAngle = MathUtils.degToRad(0); // Limit Camera rotation angle up
-    // controls.maxPolarAngle = MathUtils.degToRad(95); // Limit Camera rotation angle down
-    //camera.rotation.y = 0;
-    console.log("constructor called world js");
     //set webgazer/eyetracker listener
     webgazer.setGazeListener(function(data, timestamp) {
       var windowWidth = window.innerWidth;
@@ -87,13 +80,11 @@ class World {
           }        
       }
       catch{
-        console.log("error");
+        //console.log("error");
       }
       camera.rotation.y = 0;
     }).begin();
-
-  //pause webgazer, for performance reasons
-  //web gazer gets paused in main.js
+    webgazer.pause();
 }
 
   // Add objects from models.js

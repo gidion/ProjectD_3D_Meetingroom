@@ -50,8 +50,8 @@ var interfaceConfig = {
      * @type {boolean}
      */
     CONNECTION_INDICATOR_DISABLED: false,
-
-    DEFAULT_BACKGROUND: '#474747',
+    //changed!
+    DEFAULT_BACKGROUND: '#000000',
     DEFAULT_LOCAL_DISPLAY_NAME: 'me',
     DEFAULT_LOGO_URL: 'images/watermark.svg',
     DEFAULT_REMOTE_DISPLAY_NAME: 'Fellow Jitster',
@@ -90,8 +90,8 @@ var interfaceConfig = {
     /**
      * Whether or not the blurred video background for large video should be
      * displayed on browsers that can support it.
-     */
-    DISABLE_VIDEO_BACKGROUND: false,
+     changed! */
+    DISABLE_VIDEO_BACKGROUND: true,
 
     DISPLAY_WELCOME_FOOTER: true,
     DISPLAY_WELCOME_PAGE_ADDITIONAL_CARD: false,
@@ -138,7 +138,7 @@ var interfaceConfig = {
      *
      * @type {boolean}
      */
-    MOBILE_APP_PROMO: true,
+    MOBILE_APP_PROMO: false,
 
     /**
      * Specify custom URL for downloading android mobile app.
@@ -155,7 +155,7 @@ var interfaceConfig = {
      */
     MOBILE_DOWNLOAD_LINK_IOS: 'https://itunes.apple.com/us/app/jitsi-meet/id1165103905',
 
-    NATIVE_APP_NAME: 'Jitsi Meet',
+    NATIVE_APP_NAME: 'Video conferencing',
 
     // Names of browsers which should show a warning stating the current browser
     // has a suboptimal experience. Browsers which are not listed as optimal or
@@ -202,21 +202,29 @@ var interfaceConfig = {
      */
     SUPPORT_URL: 'https://community.jitsi.org/',
 
-    TOOLBAR_ALWAYS_VISIBLE: false,
+    TOOLBAR_ALWAYS_VISIBLE: true,
 
     /**
      * DEPRECATED!
      * This config was moved to config.js as `toolbarButtons`.
      */
-    // TOOLBAR_BUTTONS: [
+     TOOLBAR_BUTTONS: [
+         'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting', 'fullscreen',
+         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+         'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+         'videoquality', 'invite', 'feedback', 'stats', 'shortcuts',
+         'tileview', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 'security'
+         //'tileview',
+     ],
+
+     // TOOLBAR_BUTTONS: [
     //     'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting', 'fullscreen',
     //     'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
     //     'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
     //     'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
     //     'tileview', 'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 'security'
     // ],
-
-    TOOLBAR_TIMEOUT: 4000,
+    TOOLBAR_TIMEOUT: 400000,
 
     // Browsers, in addition to those which do not fully support WebRTC, that
     // are not supported and should show the unsupported browser page.
@@ -225,7 +233,7 @@ var interfaceConfig = {
     /**
      * Whether to show thumbnails in filmstrip as a column instead of as a row.
      */
-    VERTICAL_FILMSTRIP: true,
+    VERTICAL_FILMSTRIP: false,
 
     // Determines how the video would fit the screen. 'both' would fit the whole
     // screen, 'height' would fit the original video height to the height of the

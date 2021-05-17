@@ -1,6 +1,9 @@
 import { World } from './World/World.js';
 
 async function main() {
+  //if within room and not on homepage
+  if(window.location.pathname != "/"){
+   
   // Get a reference to the container element
   const container = document.querySelector('#scene-container');
 
@@ -12,8 +15,7 @@ async function main() {
 
   // start the animation loop
   world.start();
-  //pause webgazer, until user enables it
-  webgazer.pause();
+  }
 }
 
 main().catch((err) => {
