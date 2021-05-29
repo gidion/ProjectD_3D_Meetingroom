@@ -6,19 +6,22 @@ import { setupModel } from './setupModel.js'
 // To add new model:
 // 1. Add model's gltf file (and if applicable textures) to assets/models
 
+//PrePath: use '' for local, use 'libs/threejs' for server/live
+const pre_path = '';
+
 async function loadModels() {
   const loader = new GLTFLoader()
 
   // 2. Add new loader data
   const [tableData, chairData, doorData, coffee_cupData, bellData, light_switchData, microphoneData, laptopData] = await Promise.all([
-      loader.loadAsync('/assets/models/table/scene.gltf'),
-      loader.loadAsync('/assets/models/chair/scene.gltf'),
-      loader.loadAsync('/assets/models/door/scene.gltf'),
-      loader.loadAsync('/assets/models/coffee_cup/scene.gltf'),
-      loader.loadAsync('/assets/models/bell/scene.gltf'),
-      loader.loadAsync('/assets/models/light_switch/scene.gltf'),
-      loader.loadAsync('/assets/models/microphone/scene.gltf'),
-      loader.loadAsync('/assets/models/laptop/scene.gltf')
+      loader.loadAsync(pre_path + '/assets/models/table/scene.gltf'),
+      loader.loadAsync(pre_path + '/assets/models/chair/scene.gltf'),
+      loader.loadAsync(pre_path + '/assets/models/door/scene.gltf'),
+      loader.loadAsync(pre_path + '/assets/models/coffee_cup/scene.gltf'),
+      loader.loadAsync(pre_path + '/assets/models/bell/scene.gltf'),
+      loader.loadAsync(pre_path + '/assets/models/light_switch/scene.gltf'),
+      loader.loadAsync(pre_path + '/assets/models/microphone/scene.gltf'),
+      loader.loadAsync(pre_path + '/assets/models/laptop/scene.gltf')
 
   ])
 

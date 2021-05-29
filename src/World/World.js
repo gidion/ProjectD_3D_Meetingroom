@@ -1,5 +1,5 @@
 import {RectAreaLightUniformsLib} from 'https://unpkg.com/three@0.117.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
-import { MathUtils } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
+import { Mesh, PlaneGeometry, MathUtils, MeshLambertMaterial } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
 
 // ./components imports
 import { createCamera } from './components/camera.js'
@@ -65,9 +65,57 @@ class World {
 
     const light_dict = { 'ceiling lamp' : light, 'ceiling lamp 2' : light2, 'hemisphere light' : hemisphereLight, 'screen light screen' : screenLightScreen, 'screen light room' : screenLightRoom, 'ceiling light' : ceilingLight }
 
+    // cloned people right side
+    const person1 = new Mesh(geometryPlane, vid_empty_mat);
+    person1.position.set(2.5, 2, 2)
+    person1.rotation.y = MathUtils.degToRad(-25)
+    person1.scale.set(0.5, 0.5, 0.5)
+    person1.name = 'person_1'
+    person1.visible = false;
+
+    const person2 = person1.clone();
+    person2.position.z -= 2;
+    person2.name = 'person_2';
+    person2.visible = false;
+    
+    const person3 = person2.clone();
+    person3.position.z -= 2;
+    person3.name = 'person_3';
+    person3.visible = false;
+
+    const person4 = person3.clone();
+    person4.position.z -= 2;
+    person4.name = 'person_4';
+    person4.visible = false;
+
+    // left sideperson setup
+    const person5 = person1.clone()
+    person5.position.x = -2.25
+    person5.position.z = 3.7
+    person5.rotation.y = MathUtils.degToRad(25)
+    person5.name = 'person_5'
+    person5.visible = false;
+
+    // cloned persons left side
+    const person6 = person5.clone()
+    person6.position.z -= 2
+    person6.name = 'person_6'
+    person6.visible = false;
+
+    const person7 = person6.clone()
+    person7.position.z -= 2
+    person7.name = 'person_7'
+    person7.visible = false;
+
+    const person8 = person7.clone()
+    person8.position.z -= 2
+    person8.name = 'person_8'
+    person8.visible = false;
+
     scene.add(floor, frontwall, backwall, sidewall_left, sidewall_right, ceiling, ceilingLight,
        screenFrame, screen,
-       light, light2, hemisphereLight, lamp, lamp2, screenLightScreen, screenLightRoom)
+       light, light2, hemisphereLight, lamp, lamp2, screenLightScreen, screenLightRoom,
+       person1, person2, person3, person4, person5, person6, person7, person8)
 
     const resizer = new Resizer(container, camera, renderer)  // Resize window when resize event is fired
     const cameraman = new Cameraman(camera, controls, scene, screen)  // Orbital camera controls
