@@ -1,7 +1,10 @@
-import { Raycaster, Vector2 } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
+import { BoxBufferGeometry, Mesh, MeshStandardMaterial, Raycaster, Vector2, VideoTexture } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
+import { toggleLight } from '../components/lights.js'
+import { createCube } from '../components/cube.js'
 
 class Raycast {
-  constructor(camera, controls, renderer, scene) {
+  constructor(camera, controls, renderer, scene, screen, light_dict) {
+    const vid = document.querySelector('video')
     const raycaster = new Raycaster()
     const mouse = new Vector2()
     const chair_availability = {chair_l1: true, chair_r1: true, chair_l2: true, chair_r2: true,
@@ -96,7 +99,7 @@ class Raycast {
       camera.seated = chair
     }
 
-    function render() {
+    async function render() {
 
         // update the picking ray with the camera and mouse position
         raycaster.setFromCamera( mouse, camera )
@@ -104,36 +107,81 @@ class Raycast {
         // calculate objects intersecting the picking ray
         const intersects = raycaster.intersectObjects( scene.children, true )
 
+        var p_done = false  // required element found
+
         for ( let i = 0; i < intersects.length; i ++ ) {
-            // check if intersects with a mesh
-            console.log(intersects[ i ].object.name)
-            if ((intersects[ i ].object.name).includes('mesh')) {
+          var p_cur = intersects[i].object // current element
 
-              // check if mesh belongs to chair
-              var chair_name = intersects[ i ].object.parent.parent.parent.name
-              if ((chair_name).includes('chair')) {
+          // until done check if current element has a parent
+          while (p_done == false) {
 
-                // check if selected chair is available
-                if (chair_availability[chair_name]){
+            // Chair clicked
+            if (p_cur.name.includes('chair')){
+              // check if selected chair is available
+              if (chair_availability[p_cur.name]){
 
-                  // check if already sitting in a chair
-                  if (camera.seated){
-                    free_chair(camera.seated) // make current chair available again before switching seats
-                  }
-                  move_to_chair(chair_name)
-                  break
+                // check if already sitting in a chair
+                if (camera.seated){
+                  free_chair(camera.seated) // make current chair available again before switching seats
                 }
+                move_to_chair(p_cur.name)
+                p_done = true
+                break
               }
             }
-            else if ((intersects[ i ].object.name).includes('Rectangle')) {
-              alert('Coffee')
+
+            // Bell clicked
+            else if (p_cur.name == 'bell'){
+              alert('Bell clicked')
+              p_done = true
+              break
+            }
+            // Door clicked
+            else if (p_cur.name == 'door'){
+              alert('Door clicked')
+              p_done = true
+              break
+            }            
+            // Coffee clicked
+            else if (p_cur.name == 'coffee_cup'){
+              alert('Coffee clicked')
+              p_done = true
               break
             }
 
-            else if ((intersects[ i ].object.name).includes('outer')) {
-              alert('Bell')
+            // Laptop clicked
+            else if (p_cur.name == 'laptop'){
+              // check if sitting in correct chair
+              if (camera.seated == 'chair_l4'){
+                startVideo()
+              }
+              else {
+                alert('Laptop clicked, not in correct chair')
+              }
+              p_done = true
               break
             }
+            // Lightswitch clicked
+            else if (p_cur.name == 'light_switch'){
+              toggleLight(light_dict)
+              p_done = true
+              break
+            }
+            // Microphone clicked
+            else if (p_cur.name == 'microphone'){
+              alert('Microphone clicked')
+              p_done = true
+              break
+            }
+            // if no match found, and there is a parent element remaining, set it to current and try again
+            else if (p_cur.parent){
+              p_cur = p_cur.parent
+            }
+            // no match found, no more elements to check, break loop
+            else {
+              break
+            }
+          }
         }
         renderer.render( scene, camera )
     }
@@ -152,6 +200,74 @@ class Raycast {
         }
         break
     }})
+
+        // Start video
+    async function startVideo() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: true
+        })
+        const videoTracks = stream.getVideoTracks()
+        const track = videoTracks[0]
+        //alert(`Getting video from: ${track.label}`)
+        vid.srcObject = stream
+        //setTimeout(() => { track.stop() }, 3 * 1000)
+        }
+        
+        catch (error) {
+        alert(`${error.name}`)
+        console.error(error)
+        }
+
+        // Add video to screen
+        if (scene.getObjectByName( 'Video' ) == undefined ) {
+          const screensize = screen.geometry.parameters
+          const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
+          scene.add(vidcube)
+        }
+        else {
+          // Remove video stuff
+          var object = scene.getObjectByName( 'Video' )
+          scene.remove(object)
+          object.geometry.dispose()
+          object.material.dispose()
+          object = undefined
+          var object = scene.getObjectByName( 'VideoBorder' )
+          scene.remove(object)
+          object.geometry.dispose()
+          object.material.dispose()
+          object = undefined
+        }
+        
+    }
+
+    // Create a video material
+    function createVideoMaterial() {
+    const video = document.getElementById( 'video' )
+    const texture = new VideoTexture( video )
+    const material = new MeshStandardMaterial({
+        map: texture,
+        transparent: true
+      })
+    return material
+    }
+
+    // Create a video cube
+    function createVideoCube(x, y, z, pos_x, pos_y, pos_z) {
+    // create a geometry
+    const geometry = new BoxBufferGeometry(x,y,z)
+
+    // create a the video material
+    const material = createVideoMaterial()
+
+    // create a Mesh containing the geometry and material
+    const cube = new Mesh(geometry, material)
+    cube.position.set(pos_x, pos_y, pos_z)
+
+    cube.name = 'Video'
+    return cube
+    }
   }
 }
 

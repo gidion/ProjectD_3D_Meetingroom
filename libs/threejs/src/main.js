@@ -1,23 +1,21 @@
-import { World } from './World/World.js';
+import { World } from './World/World.js'
 
 async function main() {
   //if within room and not on homepage
   if(window.location.pathname != "/"){
-   
   // Get a reference to the container element
-  const container = document.querySelector('#scene-container');
+  const container = document.querySelector('#scene-container')
 
   // create a new world
-  const world = new World(container);
+  const world = new World(container)
 
   // complete async tasks
-  await world.init();
+  await world.init()
 
   // start the animation loop
-  world.start();
-  }
+  world.start()
 }
-
+}
 main().catch((err) => {
-  console.error(err); // for debugging
-});
+  console.error(err) // for debugging
+})
