@@ -65,6 +65,11 @@ class World {
 
     const light_dict = { 'ceiling lamp' : light, 'ceiling lamp 2' : light2, 'hemisphere light' : hemisphereLight, 'screen light screen' : screenLightScreen, 'screen light room' : screenLightRoom, 'ceiling light' : ceilingLight }
 
+    //People webcams
+    // Initial chair setup
+    const geometryPlane = new PlaneGeometry(1,1,1);
+    const vid_empty_mat = new MeshLambertMaterial({color: "rgb(165, 182, 184)"}); 
+
     // cloned people right side
     const person1 = new Mesh(geometryPlane, vid_empty_mat);
     person1.position.set(2.5, 2, 2)
