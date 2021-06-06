@@ -1,10 +1,10 @@
 import {RectAreaLightUniformsLib} from 'https://unpkg.com/three@0.117.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
-import { Mesh, PlaneGeometry, MathUtils, MeshLambertMaterial } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
+import { MathUtils } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
 
 // ./components imports
 import { createCamera } from './components/camera.js'
 import { createCube, createTexCube } from './components/cube.js'
-import { createAmbientLight, createDirectionalLights, createHemisphereLight, createPointLight, createRectAreaLight } from './components/lights.js'
+import { createAmbientLight, createDirectionalLight, createHemisphereLight, createPointLight, createRectAreaLight } from './components/lights.js'
 import { createScene } from './components/scene.js'
 
 import { loadModels } from './components/models/models.js'
@@ -21,12 +21,19 @@ import { Resizer } from './systems/Resizer.js'
 let camera
 let renderer
 let scene
+let scene2
+let scene3
 let loop
 
 class World {
   constructor(container) {
     const camera = createCamera()
     scene = createScene()
+    scene.name = 'scene_1'
+    scene2 = createScene()
+    scene2.name = 'scene_2'
+    scene3 = createScene()
+    scene3.name = 'scene_3'
     renderer = createRenderer()
     loop = new Loop(camera, scene, renderer)
     container.append(renderer.domElement)
@@ -64,75 +71,62 @@ class World {
     screenLightRoom.rotation.y = MathUtils.degToRad(180)
 
     const light_dict = { 'ceiling lamp' : light, 'ceiling lamp 2' : light2, 'hemisphere light' : hemisphereLight, 'screen light screen' : screenLightScreen, 'screen light room' : screenLightRoom, 'ceiling light' : ceilingLight }
-
-    //People webcams
-    // Initial chair setup
-    const geometryPlane = new PlaneGeometry(1,1,1);
-    const vid_empty_mat = new MeshLambertMaterial({color: "rgb(165, 182, 184)"}); 
-
-    // cloned people right side
-    const person1 = new Mesh(geometryPlane, vid_empty_mat);
-    person1.position.set(2.5, 2, 2)
-    person1.rotation.y = MathUtils.degToRad(-25)
-    person1.scale.set(0.5, 0.5, 0.5)
-    person1.name = 'person_1'
-    person1.visible = false;
-
-    const person2 = person1.clone();
-    person2.position.z -= 2;
-    person2.name = 'person_2';
-    person2.visible = false;
     
-    const person3 = person2.clone();
-    person3.position.z -= 2;
-    person3.name = 'person_3';
-    person3.visible = false;
+    controls.target.set(0, 2.5, 5.9) // Initial camera target
 
-    const person4 = person3.clone();
-    person4.position.z -= 2;
-    person4.name = 'person_4';
-    person4.visible = false;
-
-    // left sideperson setup
-    const person5 = person1.clone()
-    person5.position.x = -2.25
-    person5.position.z = 3.7
-    person5.rotation.y = MathUtils.degToRad(25)
-    person5.name = 'person_5'
-    person5.visible = false;
-
-    // cloned persons left side
-    const person6 = person5.clone()
-    person6.position.z -= 2
-    person6.name = 'person_6'
-    person6.visible = false;
-
-    const person7 = person6.clone()
-    person7.position.z -= 2
-    person7.name = 'person_7'
-    person7.visible = false;
-
-    const person8 = person7.clone()
-    person8.position.z -= 2
-    person8.name = 'person_8'
-    person8.visible = false;
-
+    /////////////
+    // Scene 1 //
+    /////////////
     scene.add(floor, frontwall, backwall, sidewall_left, sidewall_right, ceiling, ceilingLight,
        screenFrame, screen,
-       light, light2, hemisphereLight, lamp, lamp2, screenLightScreen, screenLightRoom,
-       person1, person2, person3, person4, person5, person6, person7, person8)
+       light, light2, hemisphereLight, lamp, lamp2, screenLightScreen, screenLightRoom)
+
+
+    /////////////
+    // Scene 2 //
+    /////////////
+    const light_sc2 = createPointLight(0, roomSize[2]-1, 4, 1, 0xffffff, 'ceiling lamp light')
+    const hemisphereLight_sc2 = createHemisphereLight('white', 'blue', 1, 'hemisphere light scene 2')
+    const screen_sc2 = screen.clone()
+    const screenFrame_sc2 = screenFrame.clone()
+    screen_sc2.position.z += 1
+    screenFrame_sc2.position.z += 1
+    // const light_sc2 = createDirectionalLight(0, 5, 0, 'white', 5)
+    const screenLightScreen_sc2 = createRectAreaLight(screen_sc2.position.x, screen_sc2.position.y, screen_sc2.position.z+0.05, 0xddddff, 0.5, screenSize[0], screenSize[1], 'screen light screen')
+    const screenLightRoom_sc2 = createRectAreaLight(screen_sc2.position.x, screen_sc2.position.y, screen_sc2.position.z, 0xddddff, 20, screenSize[0], screenSize[1], 'screen light room')
+    screenLightRoom_sc2.rotation.y = MathUtils.degToRad(180)
+
+    scene2.add( hemisphereLight_sc2, light_sc2, screen_sc2, screenFrame_sc2, screenLightRoom_sc2, screenLightScreen_sc2 )
+
 
     const resizer = new Resizer(container, camera, renderer)  // Resize window when resize event is fired
-    const cameraman = new Cameraman(camera, controls, scene, screen)  // Orbital camera controls
-    const raycaster = new Raycast(camera, controls, renderer, scene, screen, light_dict) // Check if anything interactive was clicked
-
-    controls.target.set(0, 2.5, 5.9) // Initial camera target
+    const cameraman = new Cameraman(camera, controls, scene, loop, screen, screen_sc2)  // Orbital camera controls
+    const raycaster = new Raycast(camera, controls, renderer, scene, scene2, screen, screen_sc2, light_dict, loop) // Check if anything interactive was clicked
   }
 
   // Add objects from models.js
   async init() {
-    const { chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, table, door, coffee_cup, bell, light_switch, microphone, laptop } = await loadModels()
+    const { chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8,
+      chair_sc2_1, chair_sc2_2, chair_sc2_3, chair_sc2_4, chair_sc2_5, chair_sc2_6, chair_sc2_7, chair_sc2_8,
+      table, door, coffee_cup, bell, light_switch, microphone, laptop, space_room, space_room2, stars,
+      table_sc2, laptop_sc2, coffee_cup_sc2 } = await loadModels()
+
+    // Scene 1
     scene.add( chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, table, door, coffee_cup, bell, light_switch, microphone, laptop )
+
+    const door_sc2 = door.clone()
+    const microphone_sc2 = microphone.clone()
+    const bell_sc2 = bell.clone()
+    microphone_sc2.position.y -= 0.2
+    bell_sc2.position.y -= 0.175
+    door_sc2.position.x = 0
+    door_sc2.position.z = 25
+    door_sc2.rotation.z = MathUtils.degToRad(0)
+
+    // Scene 2
+    scene2.add( door_sc2, space_room, space_room2, stars,
+      chair_sc2_1, chair_sc2_2, chair_sc2_3, chair_sc2_4, chair_sc2_5, chair_sc2_6, chair_sc2_7, chair_sc2_8,
+      table_sc2, laptop_sc2, coffee_cup_sc2, microphone_sc2, bell_sc2 )
   }
 
 

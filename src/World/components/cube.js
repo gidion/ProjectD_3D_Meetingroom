@@ -1,8 +1,5 @@
 import { BoxBufferGeometry, MathUtils, Mesh, MeshStandardMaterial, TextureLoader, RepeatWrapping, VideoTexture } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
 
-//PrePath: use '' for local, use 'libs/threejs' for server/live
-const pre_path = '';
-
 // Create a colored material
 function createColorMaterial(color) {
   const material = new MeshStandardMaterial({
@@ -18,7 +15,7 @@ function createTextureMaterial(map, rep_x, rep_y) {
   const textureLoader = new TextureLoader()
   // load a texture
   const texture = textureLoader.load(
-    pre_path + '/assets/textures/' + map
+    '/assets/textures/' + map
   )
   texture.repeat.set(rep_x, rep_y)
   texture.wrapS = texture.wrapT = RepeatWrapping

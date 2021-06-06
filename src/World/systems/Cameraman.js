@@ -2,7 +2,7 @@ import { BoxBufferGeometry, MathUtils, Mesh, MeshStandardMaterial, VideoTexture 
 import { createCube } from '../components/cube.js'
 
 class Cameraman {
-  constructor(camera, controls, scene, screen) {
+  constructor(camera, controls, scene, loop, screen, screen_sc2) {
     const vid = document.querySelector('video')
     window.addEventListener('keyup', async function(event) {
       switch (event.key) {
@@ -11,11 +11,6 @@ class Cameraman {
           case 'r':
           camera.position.set(0, 2.5, 6)
           controls.target.set(0, 2.5, 5.9)
-          break
-
-          case 't':
-          camera.position.set(0, 15, 0)
-          controls.target.set(0, 14.9, 0)
           break
 
           // minimap
@@ -57,9 +52,7 @@ class Cameraman {
       })
       const videoTracks = stream.getVideoTracks()
       const track = videoTracks[0]
-      //alert(`Getting video from: ${track.label}`)
       vid.srcObject = stream
-      //setTimeout(() => { track.stop() }, 3 * 1000)
       }
       
       catch (error) {
@@ -67,31 +60,39 @@ class Cameraman {
       console.error(error)
       }
 
+      if (loop.scene.name == 'scene_2'){
+        var cur_screen = screen_sc2
+      }
+      else {
+        var cur_screen = screen
+      } 
+
       // Add video to chair
-      if (scene.getObjectByName( 'Video' ) == undefined && camera.seated) {
+      if (loop.scene.getObjectByName( 'Video' ) == undefined && camera.seated) {
         const vidcube = createVideoCube(0.01, 0.6, 0.8, camera.position.x, camera.position.y, camera.position.z)//+0.07)
         const vidcubeborder = createCube(0.02, 0.68, 0.88, vidcube.position.x*1.005, vidcube.position.y, vidcube.position.z, 0x99ddff, 'VideoBorder')
         //vidcube.rotation.y = MathUtils.degToRad()
         
-        scene.add(vidcube)
-        scene.add(vidcubeborder)
+        loop.scene.add(vidcube)
+        loop.scene.add(vidcubeborder)
       }
 
       // Add video to screen
-      else if (scene.getObjectByName( 'Video' ) == undefined && !camera.seated) {
-        const screensize = screen.geometry.parameters
-        const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
-        scene.add(vidcube)
+      
+      else if (loop.scene.getObjectByName( 'Video' ) == undefined && !camera.seated) {
+        const screensize = cur_screen.geometry.parameters
+        const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, cur_screen.position.x, cur_screen.position.y, cur_screen.position.z)
+        loop.scene.add(vidcube)
       }
       else {
         // Remove video stuff
-        var object = scene.getObjectByName( 'Video' )
-        scene.remove(object)
+        var object = loop.scene.getObjectByName( 'Video' )
+        loop.scene.remove(object)
         object.geometry.dispose()
         object.material.dispose()
         object = undefined
-        var object = scene.getObjectByName( 'VideoBorder' )
-        scene.remove(object)
+        var object = loop.scene.getObjectByName( 'VideoBorder' )
+        loop.scene.remove(object)
         object.geometry.dispose()
         object.material.dispose()
         object = undefined

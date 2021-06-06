@@ -1,8 +1,8 @@
 import { AmbientLight, DirectionalLight, HemisphereLight, PointLight, RectAreaLight } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
 
 // Create a Directional Light
-function createDirectionalLights(x, y, z) {
-  const light = new DirectionalLight('white', 8)
+function createDirectionalLight(x, y, z, color='white', intensity=5) {
+  const light = new DirectionalLight(color, intensity)
 
   light.position.set(x, y, z)
 
@@ -77,4 +77,4 @@ function toggleLight(light_dict) {
 
 }
 
-export { createAmbientLight, createDirectionalLights, createHemisphereLight, createPointLight, createRectAreaLight, toggleLight }
+export { createAmbientLight, createDirectionalLight, createHemisphereLight, createPointLight, createRectAreaLight, toggleLight }
