@@ -24,13 +24,28 @@ class Cameraman {
           var mm = document.querySelector( '#minimap' )
           
           // Set visibility to hidden if it is currently visible, or to visible otherwise
-          function toggle_visibility() {
-            
+          function toggle_visibilitym() {
             if ( mm.style.visibility == 'visible' ) {
               mm.style.setProperty( 'visibility', 'hidden' )
             }
             else {
               mm.style.setProperty( 'visibility', 'visible' )
+            }
+          }
+          toggle_visibilitym()
+          break
+
+          //intructies
+          case 'i':
+          var ii = document.querySelector('#infobox')
+          
+          // Set visibility to hidden if it is currently visible, or to visible otherwise
+          function toggle_visibility() {
+            if ( ii.style.visibility == 'visible' ) {
+              ii.style.setProperty( 'visibility', 'hidden' )
+            }
+            else {
+              ii.style.setProperty( 'visibility', 'visible' )
             }
           }
           toggle_visibility()

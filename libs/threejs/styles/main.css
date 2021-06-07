@@ -39,12 +39,12 @@ h1 {
   overflow:auto; */
   
 }
-
-.mm_btn {
-  width: 20%;
-  height: 12.5%;
-  background-color: transparent;
-  border-color: yellowgreen;
+#infobox{
+  position: absolute;
+  left: 0;
+  width:300px;
+  height:500px;
+  z-index: 1;
 }
 
 #mm_image {

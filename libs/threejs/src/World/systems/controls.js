@@ -6,7 +6,7 @@ function createControls(camera, canvas) {
   const controls = new OrbitControls(camera, canvas)
   controls.enableDamping = true
   controls.enablePan = false
-  controls.zoomSpeed = 1
+  controls.zoomSpeed = 2
 
   controls.tick = () => controls.update()
 

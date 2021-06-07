@@ -3,7 +3,7 @@ import { toggleLight } from '../components/lights.js'
 import { createCube } from '../components/cube.js'
 
 class Raycast {
-  constructor(camera, controls, renderer, scene, screen, light_dict) {
+  constructor(camera, controls, renderer, scene, scene2, screen, screen_sc2, light_dict, loop) {
     const vid = document.querySelector('video')
     const raycaster = new Raycaster()
     const mouse = new Vector2()
@@ -11,6 +11,9 @@ class Raycast {
                                 chair_l3: true, chair_r3: true, chair_l4: true,chair_r4: true} // Which chairs are available
     const chair_positions = {chair_l1: {x:-1.575, y:2.1, z:2.8}, chair_r1: {x:1.75, y:2.1, z:2.8}, chair_l2: {x:-1.575, y:2.1, z:0.8}, chair_r2: {x:1.75, y:2.1, z:0.8}, chair_l3: {x:-1.575, y:2.1, z:-1.2}, chair_r3: {x:1.75, y:2.1, z:-1.2},
                              chair_l4: {x:-1.575, y:2.1, z:-3.2}, chair_r4: {x:1.75, y:2.1, z:-3.2}}
+
+    let current_scene
+    current_scene = scene
 
     // !!! make dry later
     var btn_l1 = document.querySelector("#btn_l1")
@@ -105,7 +108,7 @@ class Raycast {
         raycaster.setFromCamera( mouse, camera )
 
         // calculate objects intersecting the picking ray
-        const intersects = raycaster.intersectObjects( scene.children, true )
+        var intersects = raycaster.intersectObjects( loop.scene.children, true )
 
         var p_done = false  // required element found
 
@@ -138,7 +141,18 @@ class Raycast {
             }
             // Door clicked
             else if (p_cur.name == 'door'){
-              alert('Door clicked')
+              // Scene 1
+              if (current_scene == scene) {
+                loop.scene = scene2
+                current_scene = scene2
+              }
+              // Scene 2
+              else if (current_scene == scene2) {
+                loop.scene = scene
+                current_scene = scene
+              }
+
+              intersects = raycaster.intersectObjects( loop.scene.children, true ) // update intersects to check in the current scene
               p_done = true
               break
             }            
@@ -183,7 +197,7 @@ class Raycast {
             }
           }
         }
-        renderer.render( scene, camera )
+        renderer.render( current_scene, camera )
     }
 
     window.addEventListener( 'mousedown', onMouseClick, false )
@@ -201,32 +215,24 @@ class Raycast {
         break
     }})
 
-        // Start video
+    // screensharing
     async function startVideo() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio: false,
-            video: true
-        })
-        const videoTracks = stream.getVideoTracks()
-        const track = videoTracks[0]
-        //alert(`Getting video from: ${track.label}`)
-        vid.srcObject = stream
-        //setTimeout(() => { track.stop() }, 3 * 1000)
-        }
-        
-        catch (error) {
-        alert(`${error.name}`)
-        console.error(error)
-        }
 
-        // Add video to screen
-        if (scene.getObjectByName( 'Video' ) == undefined ) {
-          const screensize = screen.geometry.parameters
-          const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
-          scene.add(vidcube)
-        }
-        else {
+      let captureStream = null
+      try {
+        captureStream = await navigator.mediaDevices.getDisplayMedia({audio: false, video:true}).
+        then((stream) => {vid.srcObject = stream})
+      } catch(err) {
+        console.error("Error: " + err)
+      }
+
+      // Add video to screen
+      if (scene.getObjectByName( 'Video' ) == undefined ) {
+        const screensize = screen.geometry.parameters
+        const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
+        scene.add(vidcube)
+      }
+      else {
           // Remove video stuff
           var object = scene.getObjectByName( 'Video' )
           scene.remove(object)
@@ -239,18 +245,32 @@ class Raycast {
           object.material.dispose()
           object = undefined
         }
-        
+  }
+
+    function removeVideo(){
+      // Remove video stuff
+      var object = current_scene.getObjectByName( 'Video' )
+      removeObject(object)
+      var object = current_scene.getObjectByName( 'VideoBorder' )
+      removeObject(object)
+    }
+
+    function removeObject(object){
+      current_scene.remove(object)
+      object.geometry.dispose()
+      object.material.dispose()
+      object = undefined
     }
 
     // Create a video material
     function createVideoMaterial() {
-    const video = document.getElementById( 'video' )
-    const texture = new VideoTexture( video )
-    const material = new MeshStandardMaterial({
-        map: texture,
-        transparent: true
-      })
-    return material
+      const video = document.getElementById( 'video' )
+      const texture = new VideoTexture( video )
+      const material = new MeshStandardMaterial({
+          map: texture,
+          transparent: true
+        })
+      return material
     }
 
     // Create a video cube

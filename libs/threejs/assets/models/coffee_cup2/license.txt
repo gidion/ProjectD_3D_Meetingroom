@@ -1,0 +1,11 @@
+Model Information:
+* title:	☕ Coffeemat ☕
+* source:	https://sketchfab.com/3d-models/coffeemat-7fb196a40a6e4697aad9ca2f75c8b33d
+* author:	Roman Red (https://sketchfab.com/OFFcours1)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "☕ Coffeemat ☕" (https://sketchfab.com/3d-models/coffeemat-7fb196a40a6e4697aad9ca2f75c8b33d) by Roman Red (https://sketchfab.com/OFFcours1) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
