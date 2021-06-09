@@ -1,5 +1,5 @@
 import {RectAreaLightUniformsLib} from 'https://unpkg.com/three@0.117.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
-import { Mesh, PlaneGeometry, MathUtils, MeshLambertMaterial } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
+import { TextureLoader, Mesh, PlaneGeometry, MathUtils, MeshLambertMaterial } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
 
 // ./components imports
 import { createCamera } from './components/camera.js'
@@ -78,7 +78,8 @@ class World {
     // Initial chair setup
   
     const geometryPlane = new PlaneGeometry(1,1,1);
-    const vid_empty_mat = new MeshLambertMaterial({color: "rgb(165, 182, 184)"}); 
+    const nocam_texture = new TextureLoader().load( "libs/threejs/assets/images/nocamera.jpg" );
+    const vid_empty_mat = new MeshLambertMaterial({map: nocam_texture, color: "rgb(165, 182, 184)"}); 
 
     // cloned people right side
     const person1 = new Mesh(geometryPlane, vid_empty_mat)
@@ -136,6 +137,52 @@ class World {
        screenFrame, screen,
        light, light2, hemisphereLight, lamp, lamp2, screenLightScreen, screenLightRoom, person1, person2, person3, person4, person5, person6, person7, person8)
 
+       const person1_2 = new Mesh(geometryPlane, vid_empty_mat)
+       person1_2.position.set(2.5, 2, 2)
+       person1_2.rotation.y = MathUtils.degToRad(-25)
+       person1_2.scale.set(0.5, 0.5, 0.5)
+       person1_2.name = 'person_1'
+   
+       const person2_2 = person1_2.clone()
+       person2_2.position.z -= 2;
+       person2_2.name = 'person_2';
+   
+       const person3_2 = person2_2.clone()
+       person3_2.position.z -= 2;
+       person3_2.name = 'person_3';
+      
+       const person4_2 = person3_2.clone()
+       person4_2.position.z -= 2;
+       person4_2.name = 'person_4';
+   
+       const person5_2 = person1_2.clone()
+       // left sideperson setup
+       person5_2.position.x = -2.25
+       person5_2.position.z = 3.7
+       person5_2.rotation.y = MathUtils.degToRad(25)
+       person5_2.name = 'person_5'
+   
+       // cloned persons left side
+       const person6_2 = person5_2.clone()
+       person6_2.position.z -= 2
+       person6_2.name = 'person_6'
+       
+       const person7_2 = person6_2.clone()
+       person7_2.position.z -= 2
+       person7_2.name = 'person_7'
+       
+       const person8_2 = person7_2.clone()
+       person8_2.position.z -= 2
+       person8_2.name = 'person_8'
+
+       person1_2.visible = false;
+       person2_2.visible = false;
+       person3_2.visible = false;
+       person4_2.visible = false;
+       person5_2.visible = false;
+       person6_2.visible = false;
+       person7_2.visible = false;
+       person8_2.visible = false;
 
     /////////////
     // Scene 2 //
@@ -151,7 +198,7 @@ class World {
     const screenLightRoom_sc2 = createRectAreaLight(screen_sc2.position.x, screen_sc2.position.y, screen_sc2.position.z, 0xddddff, 20, screenSize[0], screenSize[1], 'screen light room')
     screenLightRoom_sc2.rotation.y = MathUtils.degToRad(180)
 
-    scene2.add( hemisphereLight_sc2, light_sc2, screen_sc2, screenFrame_sc2, screenLightRoom_sc2, screenLightScreen_sc2 )
+    scene2.add( hemisphereLight_sc2, light_sc2, screen_sc2, screenFrame_sc2, screenLightRoom_sc2, screenLightScreen_sc2,  person1_2, person2_2, person3_2, person4_2, person5_2, person6_2, person7_2, person8_2 )
 
 
     const resizer = new Resizer(container, camera, renderer)  // Resize window when resize event is fired
@@ -164,8 +211,8 @@ class World {
     const { chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8,
       chair_sc2_1, chair_sc2_2, chair_sc2_3, chair_sc2_4, chair_sc2_5, chair_sc2_6, chair_sc2_7, chair_sc2_8,
       table, door, coffee_cup, bell, light_switch, microphone, laptop, space_room, space_room2, stars,
-      table_sc2, laptop_sc2, coffee_cup_sc2 } = await loadModels()
-
+      table_sc2, laptop_sc2 } = await loadModels()
+      //table_sc2, laptop_sc2, coffee_cup_sc2 } = await loadModels()
     // Scene 1
     scene.add( chair1, chair2, chair3, chair4, chair5, chair6, chair7, chair8, table, door, coffee_cup, bell, light_switch, microphone, laptop )
 
@@ -181,8 +228,8 @@ class World {
     // Scene 2
     scene2.add( door_sc2, space_room, space_room2, stars,
       chair_sc2_1, chair_sc2_2, chair_sc2_3, chair_sc2_4, chair_sc2_5, chair_sc2_6, chair_sc2_7, chair_sc2_8,
-      table_sc2, laptop_sc2, coffee_cup_sc2, microphone_sc2, bell_sc2 )
-  
+      table_sc2, laptop_sc2, microphone_sc2, bell_sc2 )
+      //table_sc2, laptop_sc2, coffee_cup_sc2, microphone_sc2, bell_sc2 )
   /*
     webgazer.setGazeListener(function(data, timestamp) {
       var windowWidth = window.innerWidth;

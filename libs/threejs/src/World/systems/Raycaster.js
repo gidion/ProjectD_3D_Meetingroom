@@ -117,7 +117,11 @@ class Raycast {
 
           // until done check if current element has a parent
           while (p_done == false) {
-
+            if (camera.seated){
+              if (camera.seated == p_cur.name){
+                break
+              }
+            }
             // Chair clicked
             if (p_cur.name.includes('chair')){
               // check if selected chair is available
@@ -215,10 +219,11 @@ class Raycast {
         break
     }})
 
-    // screensharing
-    async function startVideo() {
+  // screensharing
+  async function startVideo() {
 
-      let captureStream = null
+    //schermdeling opvragen
+    let captureStream = null
       try {
         captureStream = await navigator.mediaDevices.getDisplayMedia({audio: false, video:true}).
         then((stream) => {vid.srcObject = stream})
@@ -226,26 +231,25 @@ class Raycast {
         console.error("Error: " + err)
       }
 
-      // Add video to screen
-      if (scene.getObjectByName( 'Video' ) == undefined ) {
-        const screensize = screen.geometry.parameters
-        const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, screen.position.x, screen.position.y, screen.position.z)
-        scene.add(vidcube)
+      //kamer scherm vaststellen
+      if (loop.scene.name == 'scene_2'){
+        var cur_screen = screen_sc2
       }
       else {
-          // Remove video stuff
-          var object = scene.getObjectByName( 'Video' )
-          scene.remove(object)
-          object.geometry.dispose()
-          object.material.dispose()
-          object = undefined
-          var object = scene.getObjectByName( 'VideoBorder' )
-          scene.remove(object)
-          object.geometry.dispose()
-          object.material.dispose()
-          object = undefined
-        }
-  }
+        var cur_screen = screen
+      } 
+
+      // Add video to screen
+      if (loop.scene.getObjectByName( 'Video' ) == undefined ) {
+        const screensize = cur_screen.geometry.parameters
+        const vidcube = createVideoCube(screensize.width, screensize.height, screensize.depth, cur_screen.position.x, cur_screen.position.y, cur_screen.position.z)
+        current_scene.add(vidcube)
+      }
+      else {
+        removeVideo()
+      }
+        
+    }
 
     function removeVideo(){
       // Remove video stuff

@@ -1,17 +1,35 @@
-import { MeshBasicMaterial, VideoTexture, Clock } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
+import { TextureLoader, TextGeometry, FontLoader, Mesh, MeshLambertMaterial,MeshBasicMaterial, VideoTexture, Clock } from 'https://unpkg.com/three@0.127.0/build/three.module.js'
 
 const clock = new Clock()
+//load texture for nocam
+const nocam_texture = new TextureLoader().load( "libs/threejs/assets/images/nocamera.jpg" );
 
 let additional_member_amount = -1;
 //1 second
 const update_thick_limit = 30;
 let update_timer = 0;
-
+//5 seconds update
 const lateupdate_thick_limit = 5;
 let lateupdate_timer = 0;
- 
+//data of participants
 let participants_data = [];
 
+/*
+text above users
+const loader = new FontLoader();
+const textMaterial = new MeshLambertMaterial( { color: 0xb0b0b0 } );
+let text_options = {
+  font: undefined,
+  size: 0.1,
+  height: 0.01,
+  curveSegments: 10,
+  bevelEnabled: false,
+  bevelThickness: 1,
+  bevelSize: 1,
+  bevelOffset: 0,
+  bevelSegments: 1
+}
+*/
 class Participant_data {
   constructor(name, render) {
     this.name = name
@@ -36,6 +54,31 @@ class Loop {
     this.renderer.render(this.scene, this.camera)
     })
 
+    //Person names/texts
+    /*
+    text above users
+    var current_scene = this.scene;
+
+    loader.load( 'https://unpkg.com/three@0.127.0/examples/fonts/helvetiker_regular.typeface.json', function ( font ) {
+       
+      text_options.font = font;
+      var textGeo = new TextGeometry( "My Text", text_options)
+      var textGeo2 = new TextGeometry( "My Text2", text_options)
+      var textGeo3 = new TextGeometry( "My Text3", text_options)
+
+      var text_mesh = new Mesh( textGeo, textMaterial );
+      text_mesh.position.set( 0, 2, 0 );
+      
+      var text_mesh2 = new Mesh( textGeo2, textMaterial );
+      text_mesh2.position.set( 2, 2, 0 );
+
+      var text_mesh3 = new Mesh( textGeo3, textMaterial );
+      text_mesh3.position.set( -2, 2, 0 );
+
+      current_scene.add( text_mesh, text_mesh2,text_mesh3);
+      
+      } );
+      */
   }
 
   stop() {
@@ -93,7 +136,7 @@ class Loop {
       //foreach participants
       for (let i = 0; i < max_video_persons; i++) {
         //reset participants
-        const person_object = this.scene.getObjectByName("person_" + (i + 1));
+        let person_object = this.scene.getObjectByName("person_" + (i + 1));
         if(person_object != null)
         {
           person_object.visible = false;
@@ -109,6 +152,11 @@ class Loop {
               const vid_material = this.createVideoMaterialPerson(vid_div);
               // create a Mesh containing the geometry and material
               person_object.material = vid_material;
+            }
+            //no webcam found
+            else{
+              const nocam_material = new MeshLambertMaterial({map: nocam_texture, color: "rgb(165, 182, 184)"});
+              person_object.material = nocam_material;
             }
             //else use standard texture
             console.log("found person");
@@ -141,6 +189,8 @@ class Loop {
     for (let i = 0; i < p_d.length; i++) {
       p_d[i].render.quaternion.copy(this.camera.quaternion);
     }
+
+    //also update texts
   }
 
   participants_have_changed(old_participants, current_participants, overide){
@@ -176,7 +226,10 @@ class Loop {
   get_participant_video(element){
     for (let i = 0; i < element.children.length; i++) {
       if(element.children[i].tagName == "VIDEO" || element.children[i].tagName == "video"){
+        //video is not active
+        //if(!element.children[i].paused && element.children[i].readyState > 2){
         return element.children[i];
+        //}
       }
     }
     return null;
